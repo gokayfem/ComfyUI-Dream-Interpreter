@@ -1,13 +1,13 @@
 ## Tell your dream and it interprets it and puts you inside your dream
 ![image](https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/668985f9-9211-47f5-b489-22821c97c003)
 
-1.Dream Typing: You tell it your dream.
+- **Dream Typing**: You tell it your dream.
 
-2.Dream Interpretation: It dives deep into your dream, uncovering meanings you didn't know were there!
+- **Dream Interpretation**: It dives deep into your dream, uncovering meanings you didn't know were there!
 
-3.Dream Generation: It creates a panorama image of your dream.
+- **Dream Generation**: It creates a panorama image of your dream.
 
-4.Interactive Dreamworld: This isn't just any picture; it's a whole interactive canvas powered by Three.js, letting you explore your dream as if you were there (again).
+- **Interactive Dreamworld**: This isn't just any picture; it's a whole interactive canvas powered by Three.js, letting you explore your dream as if you were there (again).
 
 ## Usage
 ```
