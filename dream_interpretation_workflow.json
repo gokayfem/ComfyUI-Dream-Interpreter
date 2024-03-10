@@ -1,0 +1,1131 @@
+{
+  "last_node_id": 46,
+  "last_link_id": 63,
+  "nodes": [
+    {
+      "id": 18,
+      "type": "LLMLoader",
+      "pos": [
+        -1218.7384432495505,
+        747.9018532690435
+      ],
+      "size": {
+        "0": 315,
+        "1": 130
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "model",
+          "type": "CUSTOM",
+          "links": [
+            20,
+            24
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LLMLoader"
+      },
+      "widgets_values": [
+        "llava-v1.6-mistral-7b.Q5_K_M.gguf",
+        2048,
+        100,
+        2
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 36,
+      "type": "LoraLoader",
+      "pos": [
+        -1260.3085752502852,
+        150.79824995727617
+      ],
+      "size": [
+        293.317963061741,
+        126
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 37
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 38
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            39
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            49,
+            50
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "360RedmondResized.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 32,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -1260.3085752502852,
+        317.7982499572762
+      ],
+      "size": [
+        303.33549374042866,
+        98
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            37
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            38
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            44
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "dreamshaperXL_v21TurboDPMSDE.safetensors"
+      ]
+    },
+    {
+      "id": 37,
+      "type": "xy_Tiling_KSampler",
+      "pos": [
+        -904.3085752502867,
+        138.79824995727617
+      ],
+      "size": [
+        351.02453289227697,
+        312.9077507647654
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 39
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 51
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 52
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 42
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            43
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "progress_latent",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "xy_Tiling_KSampler"
+      },
+      "widgets_values": [
+        401784335548188,
+        "randomize",
+        8,
+        2,
+        "dpmpp_sde",
+        "karras",
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 14,
+      "type": "LLMSampler",
+      "pos": [
+        -823.7384432495513,
+        740.9018532690435
+      ],
+      "size": {
+        "0": 315,
+        "1": 298
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "CUSTOM",
+          "link": 20,
+          "slot_index": 0
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 61,
+          "widget": {
+            "name": "prompt"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "system_msg",
+          "type": "STRING",
+          "link": 63,
+          "widget": {
+            "name": "system_msg"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            54
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LLMSampler"
+      },
+      "widgets_values": [
+        "You are an assistant who perfectly describes images.",
+        "",
+        512,
+        0.2,
+        0.95,
+        40,
+        0,
+        0,
+        1.1,
+        1088,
+        "randomize"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 26,
+      "type": "Text Concatenate",
+      "pos": [
+        -1586.682166246337,
+        625.6334044568259
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 60,
+          "widget": {
+            "name": "text_a"
+          }
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 57,
+          "widget": {
+            "name": "text_b"
+          }
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            48
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        ", ",
+        "true",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 10,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -1253,
+        459
+      ],
+      "size": {
+        "0": 315.5397644042969,
+        "1": 129.51760864257812
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 49
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 48,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            51
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Dream Prompt Positive",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "insane details, hyperdetailed, low contrast, soft cinematic light, dim colors, exposure blend, hdr, faded, slate gray atmosphere"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 11,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -1252,
+        503
+      ],
+      "size": {
+        "0": 311.5397644042969,
+        "1": 143.30308532714844
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 50,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            52
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Negative",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "bw, watermark, [deformed | disfigured], poorly drawn, [bad : wrong] anatomy, [extra | missing | floating | disconnected] limb, (mutated hands and fingers), blurry, monochrome"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 33,
+      "type": "EmptyLatentImage",
+      "pos": [
+        -922,
+        535
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        512,
+        1
+      ]
+    },
+    {
+      "id": 40,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        -586,
+        580
+      ],
+      "size": {
+        "0": 240,
+        "1": 60
+      },
+      "flags": {
+        "pinned": false
+      },
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            45
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "4xNMKDSuperscale_4xNMKDSuperscale.pt"
+      ]
+    },
+    {
+      "id": 39,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        -586,
+        528
+      ],
+      "size": {
+        "0": 280,
+        "1": 50
+      },
+      "flags": {
+        "pinned": false,
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 45,
+          "slot_index": 0
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 46
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            56
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageUpscaleWithModel"
+      }
+    },
+    {
+      "id": 41,
+      "type": "ImageScaleBy",
+      "pos": [
+        -539,
+        480
+      ],
+      "size": {
+        "0": 290,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true,
+        "pinned": false
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 56
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            55
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScaleBy"
+      },
+      "widgets_values": [
+        "lanczos",
+        1
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 38,
+      "type": "CircularVAEDecode",
+      "pos": [
+        -533,
+        184
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 43
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 44
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CircularVAEDecode"
+      }
+    },
+    {
+      "id": 20,
+      "type": "LLMSampler",
+      "pos": [
+        -1588.682166246337,
+        851.6334044568259
+      ],
+      "size": {
+        "0": 315,
+        "1": 298
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "CUSTOM",
+          "link": 24,
+          "slot_index": 0
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 59,
+          "widget": {
+            "name": "prompt"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "system_msg",
+          "type": "STRING",
+          "link": 62,
+          "widget": {
+            "name": "system_msg"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            60
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LLMSampler"
+      },
+      "widgets_values": [
+        "You are an assistant who perfectly describes images.",
+        "",
+        512,
+        0.2,
+        0.95,
+        40,
+        0,
+        0,
+        1.1,
+        508,
+        "randomize"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 44,
+      "type": "SimpleText",
+      "pos": [
+        -1973,
+        954
+      ],
+      "size": [
+        392.35190336751157,
+        154.32060801444663
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            62
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SimpleText"
+      },
+      "widgets_values": [
+        "You are a keyword extractor from a dream. Extract main keywords and put them into a single sentence.\n\nExample 1: A girl in a rainforest, crying loudly\nExample 2: A warrior inside a battlefield\nExample 3: Beautiful lady in a red dress dancing in theatre "
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 45,
+      "type": "SimpleText",
+      "pos": [
+        -1968,
+        770
+      ],
+      "size": [
+        376.23853306303727,
+        94.82219234421325
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            57
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SimpleText"
+      },
+      "widgets_values": [
+        "nsane details, hyperdetailed, low contrast, soft cinematic light, dim colors, exposure blend, hdr, faded, slate gray atmosphere"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 43,
+      "type": "SimpleText",
+      "pos": [
+        -1231,
+        934
+      ],
+      "size": [
+        389.0256278398808,
+        105.61661086792628
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            63
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SimpleText"
+      },
+      "widgets_values": [
+        "You are an excellent dream interpreter. Interpret the given dream into a short descriptive sentence."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 42,
+      "type": "DreamViewer",
+      "pos": [
+        -296,
+        121
+      ],
+      "size": [
+        1104.025947971862,
+        1004.025947971862
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "hdri_image",
+          "type": "IMAGE",
+          "link": 55
+        },
+        {
+          "name": "dream_interpretation",
+          "type": "STRING",
+          "link": 54,
+          "widget": {
+            "name": "dream_interpretation"
+          }
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DreamViewer"
+      },
+      "widgets_values": [
+        "",
+        null
+      ]
+    },
+    {
+      "id": 46,
+      "type": "SimpleText",
+      "pos": [
+        -2002,
+        100
+      ],
+      "size": [
+        725.9326317634154,
+        303.0305397889952
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            59,
+            61
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "TELL YOUR DREAM",
+      "properties": {
+        "Node name for S&R": "SimpleText"
+      },
+      "widgets_values": [
+        "i was in a dark forest in my dream"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    }
+  ],
+  "links": [
+    [
+      20,
+      18,
+      0,
+      14,
+      0,
+      "CUSTOM"
+    ],
+    [
+      24,
+      18,
+      0,
+      20,
+      0,
+      "CUSTOM"
+    ],
+    [
+      37,
+      32,
+      0,
+      36,
+      0,
+      "MODEL"
+    ],
+    [
+      38,
+      32,
+      1,
+      36,
+      1,
+      "CLIP"
+    ],
+    [
+      39,
+      36,
+      0,
+      37,
+      0,
+      "MODEL"
+    ],
+    [
+      42,
+      33,
+      0,
+      37,
+      3,
+      "LATENT"
+    ],
+    [
+      43,
+      37,
+      0,
+      38,
+      0,
+      "LATENT"
+    ],
+    [
+      44,
+      32,
+      2,
+      38,
+      1,
+      "VAE"
+    ],
+    [
+      45,
+      40,
+      0,
+      39,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      46,
+      38,
+      0,
+      39,
+      1,
+      "IMAGE"
+    ],
+    [
+      48,
+      26,
+      0,
+      10,
+      1,
+      "STRING"
+    ],
+    [
+      49,
+      36,
+      1,
+      10,
+      0,
+      "CLIP"
+    ],
+    [
+      50,
+      36,
+      1,
+      11,
+      0,
+      "CLIP"
+    ],
+    [
+      51,
+      10,
+      0,
+      37,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      52,
+      11,
+      0,
+      37,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      54,
+      14,
+      0,
+      42,
+      1,
+      "STRING"
+    ],
+    [
+      55,
+      41,
+      0,
+      42,
+      0,
+      "IMAGE"
+    ],
+    [
+      56,
+      39,
+      0,
+      41,
+      0,
+      "IMAGE"
+    ],
+    [
+      57,
+      45,
+      0,
+      26,
+      1,
+      "STRING"
+    ],
+    [
+      59,
+      46,
+      0,
+      20,
+      1,
+      "STRING"
+    ],
+    [
+      60,
+      20,
+      0,
+      26,
+      0,
+      "STRING"
+    ],
+    [
+      61,
+      46,
+      0,
+      14,
+      1,
+      "STRING"
+    ],
+    [
+      62,
+      44,
+      0,
+      20,
+      2,
+      "STRING"
+    ],
+    [
+      63,
+      43,
+      0,
+      14,
+      2,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "Prompt for Dream Generation",
+      "bounding": [
+        -2019,
+        423,
+        752,
+        727
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "locked": false
+    },
+    {
+      "title": "Dream Interpretation",
+      "bounding": [
+        -1249,
+        666,
+        753,
+        474
+      ],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "locked": false
+    },
+    {
+      "title": "PANAROMA GENERATOR",
+      "bounding": [
+        -1263,
+        86,
+        956,
+        567
+      ],
+      "color": "#b06634",
+      "font_size": 24,
+      "locked": false
+    }
+  ],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
