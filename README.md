@@ -1,5 +1,5 @@
-## Works with any Depth Map and visualizes the applied version it inside ComfyUI
-![image](https://github.com/gokayfem/ComfyUI-Depth-Visualization/assets/88277926/d13accd1-8df8-409a-b933-48b7bf56b3ea)
+## Tell your dream and it interprets it and puts you inside your dream
+![image](https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/668985f9-9211-47f5-b489-22821c97c003)
 
 ## Acknowledgements
 [flowtyone](https://github.com/flowtyone/ComfyUI-Flowty-TripoSR)
