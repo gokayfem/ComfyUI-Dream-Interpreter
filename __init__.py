@@ -28,7 +28,7 @@ class DreamViewer:
     def process_inputs(self, dream_interpretation, hdri_image):
         # Assuming hdri_image is a PIL Image object for simplicity
         # In your actual code, you might need to convert from whatever format it's in
-
+        self.saved_hdri.clear()
         # Here, you might want to somehow utilize the dream interpretation
         # For example, you could overlay text on the HDRI image, or choose images based on the interpretation
         image = hdri_image[0].detach().cpu().numpy()
@@ -50,6 +50,8 @@ class DreamViewer:
             "type": "output",
             "dream_interpretation": dream_interpretation  # You might want to save the interpretation too
         })
+
+        self.counter += 1
 
         return {"ui": {"hdri_image": self.saved_hdri, "dream_interpretation": [dream_interpretation]}}
     
