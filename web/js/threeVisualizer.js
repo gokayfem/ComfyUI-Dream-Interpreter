@@ -4,12 +4,29 @@ import { api } from '../../../scripts/api.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // Import FontLoader
+import * as dat from 'three/addons/libs/lil-gui.module.min'
+
 
 const visualizer = document.getElementById("visualizer");
 const container = document.getElementById("container");
 const progressDialog = document.getElementById("progress-dialog");
 const progressIndicator = document.getElementById("progress-indicator");
 
+const gui = new dat.GUI({ width: 150 });
+const fov = 75;
+const params = {
+    showText: true,
+    fov: fov
+  };
+  
+gui.add(params, 'showText').name('Show Text').onChange((value) => {
+textMesh.visible = value;
+});
+
+gui.add(params, 'fov', 10, 120).name('Zoom').step(0.1).onChange(function () {
+    camera.fov = params.fov;
+    camera.updateProjectionMatrix();
+});
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, extensions: {
     derivatives: true
@@ -26,8 +43,10 @@ scene.background = new THREE.Color(0x000000);
 
 const ambientLight = new THREE.AmbientLight(0xffffff);
 
-const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 20);
+
+const camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 5);
+
 const pointLight = new THREE.PointLight(0xffffff, 15);
 camera.add(pointLight);
 
