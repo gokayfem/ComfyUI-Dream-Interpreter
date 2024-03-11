@@ -84,6 +84,7 @@ async function main(hdriImageParams, dreamInterpretation) {
         hdriTexture = await hdriLoader.loadAsync(hdriImageUrl);
         console.log(hdriTexture);
         hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
+        hdriTexture.colorSpace = THREE.SRGBColorSpace;
     }
 
     if (hdriTexture) {
