@@ -17,6 +17,10 @@ git clone https://github.com/gokayfem/ComfyUI-Dream-Interpreter.git
 
 https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/bb25f413-585b-4b09-8dee-c6a4406e171e
 
+
+https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/5ce86cde-885e-40cf-b4a8-d209d7b08c4e
+
+
 ## Workflow Helpers
 [ComfyUI_VLM_nodes](https://github.com/gokayfem/ComfyUI_VLM_nodes)
 
