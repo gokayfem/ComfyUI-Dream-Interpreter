@@ -9,7 +9,7 @@ dependencies = ["Pillow>=10.1.0"]
 Repository = "https://github.com/haohaocreates/PR-ComfyUI-Dream-Interpreter-0fc09393"
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "gokayfem"
 DisplayName = "PR-ComfyUI-Dream-Interpreter-0fc09393"
 Icon = ""
 Models = [{location = "/checkpoints/model.safetensor", model_url = "https://example.com/model.zip"}]
