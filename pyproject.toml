@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-dream-interpreter"
+description = ""
+version = "1.0.0"
+license = "LICENSE"
+dependencies = ["Pillow>=10.1.0"]
+
+[project.urls]
+Repository = "https://github.com/gokayfem/ComfyUI-Dream-Interpreter"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-Dream-Interpreter"
+Icon = ""
+Models = [{location = "/checkpoints/model.safetensor", model_url = "https://example.com/model.zip"}]
