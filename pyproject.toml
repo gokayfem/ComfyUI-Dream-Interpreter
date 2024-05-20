@@ -1,7 +1,7 @@
 [project]
 name = "pr-comfyui-dream-interpreter-0fc09393"
 description = ""
-version = "1.0.0"
+version = "1.0.1"
 license = "LICENSE"
 dependencies = ["Pillow>=10.1.0"]
 
