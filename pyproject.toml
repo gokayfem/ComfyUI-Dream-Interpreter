@@ -1,15 +1,14 @@
 [project]
-name = "pr-comfyui-dream-interpreter-0fc09393"
-description = ""
+name = "comfyui-dream-interpreter"
+description = "Tell your dream and it interprets it and puts you inside your dream"
 version = "1.0.1"
 license = "LICENSE"
 dependencies = ["Pillow>=10.1.0"]
 
 [project.urls]
-Repository = "https://github.com/haohaocreates/PR-ComfyUI-Dream-Interpreter-0fc09393"
+Repository = "https://github.com/gokayfem/ComfyUI-Dream-Interpreter"
 
 [tool.comfy]
 PublisherId = "gokayfem"
-DisplayName = "PR-ComfyUI-Dream-Interpreter-0fc09393"
+DisplayName = "ComfyUI-Dream-Interpreter"
 Icon = ""
-Models = [{location = "/checkpoints/model.safetensor", model_url = "https://example.com/model.zip"}]
