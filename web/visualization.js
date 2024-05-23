@@ -1,4 +1,5 @@
 import { app } from "../../scripts/app.js"
+import { api } from "../../scripts/api.js"
 
 class Visualizer {
     constructor(node, container, visualSrc) {
@@ -9,7 +10,7 @@ class Visualizer {
             scrolling: "no",
             overflow: "hidden",
         })
-        this.iframe.src = "/extensions/ComfyUI-Dream-Interpreter/html/" + visualSrc + ".html"
+        this.iframe.src = api.apiURL("/extensions/ComfyUI-Dream-Interpreter/html/" + visualSrc + ".html")
         container.appendChild(this.iframe)
     }
 
