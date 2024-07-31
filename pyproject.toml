@@ -2,7 +2,7 @@
 name = "comfyui-dream-interpreter"
 description = "Tell your dream and it interprets it and puts you inside your dream"
 version = "1.0.2"
-license = "LICENSE"
+license = { file = "LICENSE" }
 dependencies = ["Pillow>=10.1.0"]
 
 [project.urls]
