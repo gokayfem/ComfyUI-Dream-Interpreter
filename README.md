@@ -1,42 +1,56 @@
-[DualView](https://dualview.ai) 
+# ComfyUI Dream Interpreter
 
-| Tool | Description |
-|------|-------------|
-| [DualView](https://dualview.ai) | Free side-by-side comparison tool for images, videos, audios and AI prompts |
+Turn an equirectangular dream image into an interactive 360-degree panorama
+inside ComfyUI and keep the written interpretation available alongside it.
 
-## Tell your dream and it interprets it and puts you inside your dream
-![image](https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/668985f9-9211-47f5-b489-22821c97c003)
+![Dream Interpreter](https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/668985f9-9211-47f5-b489-22821c97c003)
 
-- **Dream Typing**: You tell it your dream.
+## Features
 
-- **Dream Interpretation**: It dives deep into your dream, uncovering meanings you didn't know were there!
+- Modern ComfyUI DOM-widget integration
+- Smooth 360-degree orbit and zoom controls
+- Batch panorama selector
+- Safe, readable interpretation panel
+- PNG screenshots
+- Pinned local Three.js assets with no CDN requirement
+- Correct resize, copy/paste, collapse, and removal lifecycle
+- Stale-load cancellation, texture disposal, and visible errors
 
-- **Dream Generation**: It creates a panorama image of your dream.
+## Installation
 
-- **Interactive Dreamworld**: This isn't just any picture; it's a whole interactive canvas powered by Three.js, letting you explore your dream as if you were there (again).
+Install with ComfyUI Manager, or clone manually:
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/gokayfem/ComfyUI-Dream-Interpreter.git
+python -m pip install -r ComfyUI-Dream-Interpreter/requirements.txt
+```
+
+Restart ComfyUI after installation.
 
 ## Usage
+
+1. Generate an equirectangular 2:1 panorama using any image workflow.
+2. Produce or write a dream interpretation as a `STRING`.
+3. Add **Dream Viewer** from `visualization/3D`.
+4. Connect both inputs and queue the workflow.
+
+The included `dream_interpretation_workflow.json` is a full example and uses
+additional custom-node packs. Missing third-party nodes will be shown by
+ComfyUI when that workflow is loaded; the Dream Viewer itself only requires
+this repository.
+
+## Development
+
+```bash
+python -m pip install pytest
+pytest -q
 ```
-cd custom_nodes
-git clone https://github.com/gokayfem/ComfyUI-Dream-Interpreter.git
-```
 
-https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/bb25f413-585b-4b09-8dee-c6a4406e171e
-
-
-https://github.com/gokayfem/ComfyUI-Dream-Interpreter/assets/88277926/5ce86cde-885e-40cf-b4a8-d209d7b08c4e
-
-
-## Workflow Helpers
-[ComfyUI_VLM_nodes](https://github.com/gokayfem/ComfyUI_VLM_nodes)
-
-[ComfyUI-Dream-Interpreter](https://github.com/gokayfem/ComfyUI-Dream-Interpreter)
-
-[ComfyUI_Jags_VectorMagic](https://github.com/jags111/ComfyUI_Jags_VectorMagic)
-
-[LLava 1.6 Mistral](https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q5_K_M.gguf?download=true) as LLM
-
-[Panorama SDXL LoRA](https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10)
+The browser assets are vendored from Three.js 0.185.1. Its MIT license is in
+`web/vendor/THREE-LICENSE.txt`.
 
 ## Acknowledgements
-[flowtyone](https://github.com/flowtyone/ComfyUI-Flowty-TripoSR)
+
+The original viewer was inspired by
+[ComfyUI-Flowty-TripoSR](https://github.com/flowtyone/ComfyUI-Flowty-TripoSR).
