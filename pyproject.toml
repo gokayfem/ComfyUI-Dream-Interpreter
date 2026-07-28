@@ -1,12 +1,17 @@
 [project]
 name = "comfyui-dream-interpreter"
-description = "Tell your dream and it interprets it and puts you inside your dream"
-version = "1.0.2"
+description = "Interactive 360-degree panorama and dream-interpretation viewer for ComfyUI"
+version = "2.0.0"
+requires-python = ">=3.10"
 license = { file = "LICENSE" }
-dependencies = ["Pillow>=10.1.0"]
+dependencies = [
+    "numpy>=1.25.0",
+    "Pillow>=10.1.0",
+]
 
 [project.urls]
 Repository = "https://github.com/gokayfem/ComfyUI-Dream-Interpreter"
+Issues = "https://github.com/gokayfem/ComfyUI-Dream-Interpreter/issues"
 
 [tool.comfy]
 PublisherId = "gokayfem"

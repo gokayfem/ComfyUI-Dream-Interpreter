@@ -1,32 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="/extensions/ComfyUI-Dream-Interpreter/style/threeStyle.css">
-		<link type="text/css" rel="stylesheet" href="/extensions/ComfyUI-Dream-Interpreter/style/progressStyle.css">
-	</head>
+    <head>
+        <meta charset="utf-8">
+        <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,maximum-scale=1"
+        >
+        <title>Dream Viewer</title>
+        <link rel="stylesheet" href="../style/threeStyle.css">
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "../vendor/three.module.min.mjs"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <main id="viewer" aria-label="Interactive dream panorama">
+            <div id="canvas-container"></div>
+            <div id="status" role="status" aria-live="polite">Waiting for output…</div>
+            <div id="error" role="alert" hidden></div>
 
-	<body>
-		<div id="progress-container">
-			<dialog open id="progress-dialog">
-				<p>
-					<label for="progress-indicator">Loading scene...</label>
-				</p>
-				<progress max="100" id="progress-indicator"></progress>
-			</dialog>
-		</div>
+            <aside id="interpretation-panel" hidden>
+                <div class="panel-heading">
+                    <strong>Dream interpretation</strong>
+                    <button id="close-interpretation" type="button" aria-label="Hide interpretation">×</button>
+                </div>
+                <p id="interpretation"></p>
+            </aside>
 
-		<div id="container"></div>
-		<script type="importmap">
-			{
-			  "imports": {
-				"three": "https://unpkg.com/three@latest/build/three.module.js",
-				"three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
-			  }
-			}
-		</script>
-		<script id="visualizer" type="module" filepath="" crossorigin src="/extensions/ComfyUI-Dream-Interpreter/js/threeVisualizer.js"></script>
-	</body>
+            <section class="toolbar" aria-label="Dream viewer controls">
+                <label>
+                    Frame
+                    <select id="batch-select" disabled></select>
+                </label>
+                <button id="reset-camera" type="button">Reset view</button>
+                <button id="toggle-interpretation" type="button">Interpretation</button>
+                <button id="screenshot" type="button">Save PNG</button>
+            </section>
+        </main>
 
+        <script type="module" src="../js/threeVisualizer.mjs"></script>
+    </body>
 </html>
