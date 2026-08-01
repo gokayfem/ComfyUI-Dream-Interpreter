@@ -3,27 +3,69 @@ name: CI
 on:
   pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  python:
+    name: Python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.12", "3.14"]
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+          - os: ubuntu-latest
+            python: "3.13"
+          - os: windows-latest
+            python: "3.12"
+          - os: macos-latest
+            python: "3.12"
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python }}
           cache: pip
-      - run: python -m pip install -r requirements.txt pytest
-      - run: python -m compileall -q .
-      - run: pytest -q
-      - run: node --input-type=module --check < web/visualization.js
-      - run: node --check web/js/threeVisualizer.mjs
+      - name: Install CPU PyTorch
+        if: runner.os != 'macOS'
+        run: python -m pip install --disable-pip-version-check --index-url https://download.pytorch.org/whl/cpu torch
+      - name: Install CPU PyTorch on macOS
+        if: runner.os == 'macOS'
+        run: python -m pip install --disable-pip-version-check torch
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt pytest
+      - name: Compile Python
+        run: python -m compileall -q .
+      - name: Test
+        run: pytest -q
+      - name: Validate Registry metadata
+        run: python -c "import pathlib,tomllib; d=tomllib.loads(pathlib.Path('pyproject.toml').read_text('utf-8')); assert d['project']['version']=='3.0.0'; assert d['tool']['comfy']['PublisherId']=='gokayfem'"
+
+  frontend:
+    name: Frontend and examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check browser modules
+        run: |
+          node --input-type=module --check < web/viewer_extension_3_0.js
+          node --check web/js/threeVisualizer.mjs
+          node --check web/vendor/three.module.min.mjs
+          node --check web/vendor/three.core.min.mjs
+      - name: Reject runtime CDN imports
+        run: |
+          if grep -R -n -E 'https?://|@latest' web --include='*.html' --include='*.js' --include='*.mjs' --exclude-dir=vendor; then
+            echo 'Runtime remote dependency found.' >&2
+            exit 1
+          fi
+      - name: Validate example JSON
+        run: |
+          for file in examples/workflows/*.json examples/api/*.json; do
+            python -m json.tool "$file" >/dev/null
+          done

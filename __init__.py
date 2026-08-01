@@ -9,6 +9,17 @@ import folder_paths
 import numpy as np
 from PIL import Image
 
+try:
+    from .dream_nodes import (
+        NODE_CLASS_MAPPINGS as TOOL_NODE_CLASS_MAPPINGS,
+        NODE_DISPLAY_NAME_MAPPINGS as TOOL_NODE_DISPLAY_NAME_MAPPINGS,
+    )
+except (ImportError, ModuleNotFoundError):  # Standalone import used by pytest.
+    from dream_nodes import (  # type: ignore[no-redef]
+        NODE_CLASS_MAPPINGS as TOOL_NODE_CLASS_MAPPINGS,
+        NODE_DISPLAY_NAME_MAPPINGS as TOOL_NODE_DISPLAY_NAME_MAPPINGS,
+    )
+
 
 def _as_pil(image: Any) -> Image.Image:
     array = image.detach().cpu().float().numpy()
@@ -58,7 +69,8 @@ class DreamViewer:
             }
         }
 
-    RETURN_TYPES = ()
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("panorama", "interpretation")
     OUTPUT_NODE = True
     FUNCTION = "process_inputs"
     CATEGORY = "visualization/3D"
@@ -77,12 +89,16 @@ class DreamViewer:
             "ui": {
                 "hdri_image": panoramas,
                 "dream_interpretation": [interpretation],
-            }
+            },
+            "result": (hdri_image, interpretation),
         }
 
 
-NODE_CLASS_MAPPINGS = {"DreamViewer": DreamViewer}
-NODE_DISPLAY_NAME_MAPPINGS = {"DreamViewer": "Dream Viewer"}
+NODE_CLASS_MAPPINGS = {"DreamViewer": DreamViewer, **TOOL_NODE_CLASS_MAPPINGS}
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "DreamViewer": "Dream Panorama Viewer Pro",
+    **TOOL_NODE_DISPLAY_NAME_MAPPINGS,
+}
 WEB_DIRECTORY = "./web"
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

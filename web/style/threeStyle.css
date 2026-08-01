@@ -109,7 +109,8 @@ body,
 }
 
 button,
-select {
+select,
+input[type="range"] {
     min-height: 2rem;
     padding: 0.35rem 0.6rem;
     border: 1px solid #51475f;
@@ -117,6 +118,27 @@ select {
     background: #292331;
     color: inherit;
     font: inherit;
+}
+
+.checkbox {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+#field-of-view {
+    width: 7rem;
+}
+
+#field-of-view-value {
+    min-width: 2.5rem;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+    }
 }
 
 button {
