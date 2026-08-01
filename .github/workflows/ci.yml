@@ -38,13 +38,13 @@ jobs:
         if: runner.os == 'macOS'
         run: python -m pip install --disable-pip-version-check torch
       - name: Install test dependencies
-        run: python -m pip install --disable-pip-version-check -r requirements.txt pytest
+        run: python -m pip install --disable-pip-version-check -r requirements.txt pytest tomli
       - name: Compile Python
         run: python -m compileall -q .
       - name: Test
         run: pytest -q
       - name: Validate Registry metadata
-        run: python -c "import pathlib,tomllib; d=tomllib.loads(pathlib.Path('pyproject.toml').read_text('utf-8')); assert d['project']['version']=='3.0.0'; assert d['tool']['comfy']['PublisherId']=='gokayfem'"
+        run: python -c "import pathlib,tomli; d=tomli.loads(pathlib.Path('pyproject.toml').read_text('utf-8')); assert d['project']['version']=='3.0.0'; assert d['tool']['comfy']['PublisherId']=='gokayfem'"
 
   frontend:
     name: Frontend and examples
