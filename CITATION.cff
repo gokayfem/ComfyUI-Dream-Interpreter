@@ -2,13 +2,13 @@ cff-version: 1.2.0
 message: "If you use ComfyUI Dream Interpreter in your work, please cite it using the metadata below."
 type: software
 title: "ComfyUI Dream Interpreter"
-version: "2.0.0"
-date-released: 2026-07-28
+version: "3.0.0"
+date-released: 2026-08-01
 authors:
   - family-names: "Aydoğan"
     given-names: "Gökay"
     orcid: "https://orcid.org/0000-0002-2343-9433"
-abstract: "An interactive 360-degree panorama and dream-interpretation viewer for ComfyUI."
+abstract: "An offline panorama validation, projection, creative-reflection, journaling, and interactive 360-degree visualization toolkit for ComfyUI."
 keywords:
   - ComfyUI
   - panorama

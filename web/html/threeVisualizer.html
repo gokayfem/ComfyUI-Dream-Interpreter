@@ -35,12 +35,18 @@
                     Frame
                     <select id="batch-select" disabled></select>
                 </label>
+                <label>
+                    FOV
+                    <input id="field-of-view" type="range" min="30" max="110" step="1" value="70">
+                    <output id="field-of-view-value">70°</output>
+                </label>
+                <label class="checkbox"><input id="auto-rotate" type="checkbox"> Auto rotate</label>
                 <button id="reset-camera" type="button">Reset view</button>
                 <button id="toggle-interpretation" type="button">Interpretation</button>
                 <button id="screenshot" type="button">Save PNG</button>
             </section>
         </main>
 
-        <script type="module" src="../js/threeVisualizer.mjs"></script>
+        <script type="module" src="../js/threeVisualizer.mjs?v=3.0.0"></script>
     </body>
 </html>

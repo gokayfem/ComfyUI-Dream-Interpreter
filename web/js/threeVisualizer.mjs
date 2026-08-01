@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "../vendor/OrbitControls.mjs";
 
-const SOURCE = "gokayfem.dream-interpreter";
+const SOURCE = "gokayfem.dream-interpreter.viewer";
 const container = document.querySelector("#canvas-container");
 const statusElement = document.querySelector("#status");
 const errorElement = document.querySelector("#error");
@@ -36,6 +36,14 @@ let panorama = null;
 let updateVersion = 0;
 let animationFrame = null;
 let disposed = false;
+let contextLost = false;
+let inViewport = true;
+const clock = new THREE.Clock();
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduceMotion) {
+    document.querySelector("#auto-rotate").disabled = true;
+    document.querySelector("#auto-rotate").title = "Disabled by prefers-reduced-motion";
+}
 
 function setStatus(message) {
     statusElement.textContent = message;
@@ -135,7 +143,17 @@ async function showFrame(index) {
         );
         scene.add(panorama);
         resetCamera();
-        statusElement.hidden = true;
+        interpretationElement.textContent = String(
+            output?.dream_interpretation?.[index]
+            ?? output?.dream_interpretation?.[0]
+            ?? "",
+        );
+        const ratio = texture.image.width / Math.max(texture.image.height, 1);
+        if (Math.abs(ratio - 2) > 0.02) {
+            setStatus(`Aspect warning: ${texture.image.width}×${texture.image.height}; immersive panoramas should be 2:1.`);
+        } else {
+            statusElement.hidden = true;
+        }
     } catch (error) {
         if (version === updateVersion) {
             removePanorama();
@@ -151,9 +169,7 @@ function setOutput(nextOutput) {
         return;
     }
     output = nextOutput;
-    interpretationElement.textContent = String(
-        nextOutput.dream_interpretation?.[0] ?? "",
-    );
+    interpretationElement.textContent = String(nextOutput.dream_interpretation?.[0] ?? "");
 
     batchSelect.replaceChildren();
     for (let index = 0; index < count; index += 1) {
@@ -190,11 +206,36 @@ function animate() {
         return;
     }
     animationFrame = requestAnimationFrame(animate);
-    if (document.visibilityState === "visible") {
+    if (
+        document.querySelector("#auto-rotate").checked
+        && !reduceMotion
+        && panorama
+        && inViewport
+    ) {
+        panorama.rotation.y += Math.min(clock.getDelta(), 0.1) * 0.08;
+    } else {
+        clock.getDelta();
+    }
+    if (document.visibilityState === "visible" && inViewport && !contextLost) {
         controls.update();
         renderer.render(scene, camera);
     }
 }
+
+const intersectionObserver = new IntersectionObserver(([entry]) => {
+    inViewport = entry?.isIntersecting ?? true;
+});
+intersectionObserver.observe(container);
+renderer.domElement.addEventListener("webglcontextlost", (event) => {
+    event.preventDefault();
+    contextLost = true;
+    setError("The browser paused this WebGL context. It will recover automatically.");
+});
+renderer.domElement.addEventListener("webglcontextrestored", () => {
+    contextLost = false;
+    setStatus("WebGL restored; rebuilding panorama…");
+    void showFrame(Number(batchSelect.value || 0));
+});
 animate();
 
 batchSelect.addEventListener("change", () => {
@@ -202,6 +243,11 @@ batchSelect.addEventListener("change", () => {
 });
 document.querySelector("#reset-camera").addEventListener("click", resetCamera);
 document.querySelector("#screenshot").addEventListener("click", takeScreenshot);
+document.querySelector("#field-of-view").addEventListener("input", (event) => {
+    camera.fov = Number(event.target.value);
+    camera.updateProjectionMatrix();
+    document.querySelector("#field-of-view-value").value = `${camera.fov}°`;
+});
 document.querySelector("#toggle-interpretation").addEventListener("click", () => {
     interpretationPanel.hidden = !interpretationPanel.hidden;
 });
@@ -230,12 +276,14 @@ window.addEventListener("message", (event) => {
     }
     if (event.data.type === "initialize") {
         viewUrl = event.data.viewUrl;
+        setStatus("Viewer connected — queue a panorama to begin.");
     } else if (event.data.type === "update") {
         setOutput(event.data.output);
     } else if (event.data.type === "dispose") {
         disposed = true;
         updateVersion += 1;
         cancelAnimationFrame(animationFrame);
+        intersectionObserver.disconnect();
         removePanorama();
         controls.dispose();
         renderer.dispose();

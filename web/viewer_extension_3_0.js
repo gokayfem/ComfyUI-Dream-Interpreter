@@ -1,9 +1,23 @@
+// Versioned entrypoint prevents stale browser modules after major upgrades.
 import { api } from "../../scripts/api.js";
 import { app } from "../../scripts/app.js";
 
-const EXTENSION_NAME = "gokayfem.dream-interpreter";
+const EXTENSION_NAME = "gokayfem.dream-interpreter.viewer";
 const PATCHED = Symbol("dreamViewerPatched");
-const VIEWER_URL = new URL("./html/threeVisualizer.html", import.meta.url).href;
+const VIEWER_URL = new URL("./html/threeVisualizer.html?v=3.0.0", import.meta.url).href;
+
+function normalizeOutput(message) {
+    const payload = message?.output ?? message ?? {};
+    return {
+        hdri_image: payload.hdri_image ?? [],
+        dream_interpretation: payload.dream_interpretation ?? [""],
+    };
+}
+
+function hasViewerOutput(message) {
+    const payload = message?.output ?? message ?? {};
+    return (payload.hdri_image?.length ?? 0) > 0;
+}
 
 function chainCallback(previous, next) {
     return function chainedCallback(...args) {
@@ -26,8 +40,7 @@ function createViewer(node) {
 
     const iframe = document.createElement("iframe");
     iframe.title = "Interactive 360-degree dream panorama";
-    iframe.src = VIEWER_URL;
-    iframe.loading = "eager";
+    iframe.loading = "lazy";
     iframe.setAttribute(
         "sandbox",
         "allow-scripts allow-same-origin allow-downloads",
@@ -39,12 +52,11 @@ function createViewer(node) {
         display: "block",
         background: "#0c0d12",
     });
-    container.append(iframe);
-
     const channel = globalThis.crypto?.randomUUID?.()
         ?? `dream-${Date.now()}-${Math.random()}`;
     let ready = false;
-    let pendingOutput = null;
+    let lastOutput = null;
+    let restoring = false;
 
     const post = (type, payload = {}) => {
         iframe.contentWindow?.postMessage(
@@ -60,9 +72,41 @@ function createViewer(node) {
 
     const initialize = () => {
         post("initialize", { viewUrl: api.apiURL("/view") });
-        if (pendingOutput) {
-            post("update", { output: pendingOutput });
-            pendingOutput = null;
+        if (lastOutput) {
+            post("update", { output: lastOutput });
+        }
+    };
+
+    const restoreLatestOutput = async () => {
+        if (lastOutput || restoring) {
+            return;
+        }
+        restoring = true;
+        try {
+            const response = await api.fetchApi("/history?max_items=32");
+            if (!response.ok) {
+                return;
+            }
+            const histories = Object.values(await response.json()).reverse();
+            for (const history of histories) {
+                const nodeId = String(node.id);
+                const graph = history?.prompt?.[2];
+                const output = history?.outputs?.[nodeId];
+                if (
+                    graph?.[nodeId]?.class_type === "DreamViewer"
+                    && hasViewerOutput(output)
+                ) {
+                    lastOutput = normalizeOutput(output);
+                    if (ready) {
+                        post("update", { output: lastOutput });
+                    }
+                    break;
+                }
+            }
+        } catch (error) {
+            console.debug("[Dream Viewer] Cached output restore skipped.", error);
+        } finally {
+            restoring = false;
         }
     };
 
@@ -78,6 +122,7 @@ function createViewer(node) {
         }
         ready = true;
         initialize();
+        void restoreLatestOutput();
     };
 
     window.addEventListener("message", onMessage);
@@ -85,10 +130,17 @@ function createViewer(node) {
         ready = false;
         post("connect");
     });
+    iframe.src = VIEWER_URL;
+    container.append(iframe);
+    const connectTimer = window.setInterval(() => {
+        if (!ready) {
+            post("connect");
+        }
+    }, 500);
 
     const widget = node.addDOMWidget("dream_preview", "DREAM_PREVIEW", container, {
         canvasOnly: true,
-        hideOnZoom: false,
+        hideOnZoom: true,
     });
     widget.serialize = false;
     widget.computeLayoutSize = () => ({
@@ -109,14 +161,29 @@ function createViewer(node) {
         if (!output?.hdri_image?.length) {
             return;
         }
+        lastOutput = output;
         if (!ready) {
-            pendingOutput = output;
             return;
         }
         post("update", { output });
     };
 
+    const onExecution = ({ detail }) => {
+        const outputNodeId = String(detail?.node ?? "").split(":")[0];
+        if (outputNodeId === String(node.id)) {
+            node.__dreamViewerUpdate?.(normalizeOutput(detail?.output));
+        }
+    };
+    const onExecutionCached = () => {
+        void restoreLatestOutput();
+    };
+    api.addEventListener("executed", onExecution);
+    api.addEventListener("execution_cached", onExecutionCached);
+
     node.onRemoved = chainCallback(node.onRemoved, () => {
+        window.clearInterval(connectTimer);
+        api.removeEventListener("executed", onExecution);
+        api.removeEventListener("execution_cached", onExecutionCached);
         window.removeEventListener("message", onMessage);
         post("dispose");
         iframe.src = "about:blank";
@@ -136,16 +203,19 @@ app.registerExtension({
         nodeType.prototype.onNodeCreated = function onDreamViewerCreated(...args) {
             const result = onNodeCreated?.apply(this, args);
             createViewer(this);
+            requestAnimationFrame(() => {
+                const cached = app.nodeOutputs?.[this.id];
+                if (cached) {
+                    this.__dreamViewerUpdate?.(normalizeOutput(cached));
+                }
+            });
             return result;
         };
 
         const onExecuted = nodeType.prototype.onExecuted;
         nodeType.prototype.onExecuted = function onDreamViewerExecuted(message) {
             const result = onExecuted?.apply(this, arguments);
-            this.__dreamViewerUpdate?.({
-                hdri_image: message?.hdri_image ?? [],
-                dream_interpretation: message?.dream_interpretation ?? [""],
-            });
+            this.__dreamViewerUpdate?.(normalizeOutput(message));
             return result;
         };
     },

@@ -1,0 +1,14 @@
+{
+  "prompt": {
+    "1": {"class_type":"LoadImage","inputs":{"image":"O2mKCB4qqCE1Ij7ejvB5M_image.png"}},
+    "2": {"class_type":"DreamPanoramaValidate","inputs":{"panorama":["1",0],"repair_aspect":true,"target_width":1536}},
+    "3": {"class_type":"DreamPanoramaSeamBlend","inputs":{"panorama":["2",0],"blend_width":48}},
+    "4": {"class_type":"DreamViewer","inputs":{"dream_interpretation":"Creative panorama study: a luminous canal city, layered thresholds, and a calm sense of exploration. Creative reflection only.","hdri_image":["3",0]}},
+    "5": {"class_type":"DreamEquirectToPerspective","inputs":{"panorama":["3",0],"yaw":35.0,"pitch":-8.0,"roll":0.0,"field_of_view":78.0,"width":768,"height":512}},
+    "6": {"class_type":"DreamLittlePlanet","inputs":{"panorama":["3",0],"size":768,"rotation":18.0,"zoom":1.0,"background":"zenith color"}},
+    "7": {"class_type":"PreviewImage","inputs":{"images":["3",1]}},
+    "8": {"class_type":"PreviewImage","inputs":{"images":["5",0]}},
+    "9": {"class_type":"PreviewImage","inputs":{"images":["6",0]}},
+    "10": {"class_type":"DreamPromptBuilder","inputs":{"dream_text":"I crossed a bridge above moonlit water and entered a city of doors.","purpose":"panorama generation","visual_style":"cinematic surrealism","mood":"awe-filled","palette":"moonlit blue","custom_direction":"Architectural detail and navigable spatial continuity."}}
+  }
+}
